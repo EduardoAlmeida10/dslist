@@ -6,6 +6,7 @@ import com.devArceus.dslist.dto.GameMinDTO;
 import com.devArceus.dslist.entities.Game;
 import com.devArceus.dslist.entities.GameList;
 import com.devArceus.dslist.exceptions.ResourceNotFoundException;
+import com.devArceus.dslist.repositories.GameListRepository;
 import com.devArceus.dslist.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,25 +16,24 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GameService {
+public class GameListService {
 
     @Autowired
-    private GameRepository gameRepository;
-    @Transactional(readOnly = true)
-    public GameDTO findById(Long id){
-        //implementar error por id nao encontrado;
-        Optional<Game> result = gameRepository.findById(id);
+    private GameListRepository gameListRepository;
 
+    @Transactional(readOnly = true)
+    public GameListDTO findById(Long id){
+        //implementar error por id nao encontrado;
+        Optional<GameList> result = gameListRepository.findById(id);
         if(result.isPresent()){
-            return new GameDTO(result.get());
+            return new GameListDTO(result.get());
         }else{
-            throw new ResourceNotFoundException("Game com id " + id + " não foi encontrado.");
+            throw new ResourceNotFoundException("GameList com id " + id + " não foi encontrado.");
         }
     }
     @Transactional(readOnly = true)
-    public List<GameMinDTO> findAll() {
-        List<Game> result = gameRepository.findAll();
-        List<GameMinDTO> dto = result.stream().map(x -> new GameMinDTO(x)).toList();
-        return dto;
+    public List<GameListDTO> findAll() {
+        List<GameList> result = gameListRepository.findAll();
+        return result.stream().map(x -> new GameListDTO(x)).toList();
     }
 }
